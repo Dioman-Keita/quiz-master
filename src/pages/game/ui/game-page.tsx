@@ -8,6 +8,8 @@ import type { Question, QuestionState } from "@entities/question/model/types";
 import { Typography } from "@shared/ui/typography";
 import { Button } from "@shared/ui/button"; // Assuming button for retry
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
+import { useQuizSessionStore } from "@entities/session/model/store"; // Import session store
+import { checkAnswer } from "@entities/session/lib/score-logic"; // Import score logic
 
 export const GamePage: React.FC = () => {
   const [questionState, setQuestionState] = useState<QuestionState>({
@@ -22,6 +24,9 @@ export const GamePage: React.FC = () => {
     null,
   );
 
+  // Get score and reset function from store
+  const { score, resetSession, incrementQuestionIndex } = useQuizSessionStore();
+
   const getQuestion = useCallback(async () => {
     setQuestionState((prevState: QuestionState) => ({
       ...prevState,
@@ -29,34 +34,37 @@ export const GamePage: React.FC = () => {
       isError: false,
       error: null,
     }));
+    setSelectedAnswer(null); // Reset selected answer for new question
+    setAnsweredCorrectly(null); // Reset answer status
+
     const result = await fetchQuestions(1); // Fetch 1 question at a time
     setQuestionState(result);
     setCurrentQuestion(result.data); // Set the fetched question as current
-    setSelectedAnswer(null); // Reset selected answer for new question
-    setAnsweredCorrectly(null); // Reset answer status
   }, []);
 
   useEffect(() => {
     getQuestion();
-  }, [getQuestion]);
+    // Reset session when game page mounts initially
+    resetSession();
+  }, [getQuestion, resetSession]);
 
   const handleAnswerSelected = (answer: string) => {
     if (!currentQuestion || selectedAnswer !== null) return;
 
     setSelectedAnswer(answer);
-    if (answer === currentQuestion.correctAnswer) {
-      setAnsweredCorrectly(true);
-      // TODO: Increment score
-    } else {
-      setAnsweredCorrectly(false);
-      // TODO: Handle incorrect answer
-    }
-    // TODO: Add delay then fetch next question or show result
+    const correct = checkAnswer(answer, currentQuestion.correctAnswer);
+    setAnsweredCorrectly(correct);
+    incrementQuestionIndex(); // Increment question index after answering
+
+    // Automatically advance to next question after a short delay
+    setTimeout(() => {
+      getQuestion();
+    }, 1500); // 1.5 second delay
   };
 
   const handleNextQuestion = () => {
-    // For now, just refetch a new question
-    // In a full game, this would advance to the next question in a list
+    // This function will now primarily be used for immediate advancement if desired,
+    // otherwise handleAnswerSelected takes care of the delay.
     getQuestion();
   };
 
@@ -67,6 +75,9 @@ export const GamePage: React.FC = () => {
         <Typography variant="h2" className="mb-8">
           Quiz Time!
         </Typography>
+        <div className="mb-4 text-lg font-semibold">
+          Score: {score}
+        </div>
         <div className="mb-6">
           {/* Assuming QuizTimer display goes here */}
           <QuizTimer
