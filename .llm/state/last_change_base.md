@@ -1,20 +1,55 @@
 # Last Change Base
 
-This file is the ONLY source of truth for the current project state.
-Any assumption not explicitly written here is INVALID.
+THIS FILE IS THE ONLY SOURCE OF TRUTH.
+ANYTHING NOT WRITTEN HERE DOES NOT EXIST.
 
-LLM RULE:
+MODE: UI-FIRST DEVELOPMENT
 
-- Read this file first
-- Obey it strictly
-- Do NOT infer missing steps
-- Do NOT repeat completed work
+---
+
+## ABSOLUTE RULES (NON NEGOTIABLE)
+
+- The goal is to BUILD THE FULL UI.
+- Backend robustness, error handling and optimizations come LATER.
+- UI is always ITERATIVE.
+- UI is NEVER frozen unless explicitly stated by the user.
+
+FORBIDDEN TOPICS:
+
+- robust-question-fetching
+- backend robustness
+- error handling strategies
+- retries, edge cases, optimizations
+
+If mentioned → STOP.
 
 ---
 
 ## 1. CURRENT PROJECT STATE
 
-### 1.1 Completed Features (DO NOT TOUCH)
+### 1.1 Implemented UI (ITERATIVE – NOT FINAL)
+
+These elements EXIST but are NOT complete and MAY be modified freely.
+
+- **UI Flow**: The complete UI flow from Home -> Game -> Result is implemented.
+  - `HomePage`: Displays `ConfigForm` to start the quiz.
+  - `GamePage`: Renders the `QuizBoard` which contains the main quiz logic, question display, and timer.
+  - `ResultPage`: Shows the final score and a "Play Again" button.
+  - `App.tsx`: Handles the routing between the pages.
+
+- **Components**:
+  - `ConfigForm`: Allows selecting category & difficulty (hardcoded).
+  - `QuizBoard`: The main component for the quiz game.
+  - `SummaryCard`: Displays the quiz results.
+
+- **Status**: UI ITERATION
+- **Modifiable**: YES
+
+NO UI is considered final.
+
+---
+
+### 1.2 Completed Features (DO NOT TOUCH)
 
 - Feature name:
   - Description:
@@ -37,94 +72,112 @@ Example:
   - Commit: `9c7e171`
   - PR: (To be filled after PR)
 
----
-
-### 1.2 Protected / Frozen Components
-
-These parts are FINAL and must NEVER be modified.
-
-- robust-question-fetching
-- quiz-config (ConfigForm)
-- Any file not listed in "Next Action"
+- ui-build
+  - Implemented the complete UI flow for the Quiz Master application, covering the Home, Game, and Result pages.
+  - Branch: `feat/ui-build`
+  - Commit: `2fc4318`
+  - PR: (To be filled after PR)
 
 ---
 
-## 2. CURRENT WORK CONTEXT
+## 2. PROTECTED COMPONENTS
 
-### Active Branch Policy
+ONLY logic-level features may be protected.
 
-- No work is allowed on completed feature branches
-- A NEW branch MUST be created for each new feature or integration
+UI components are NEVER protected.
+
+Currently protected:
+
+- NONE
 
 ---
 
-## 3. NEXT FEATURE TO IMPLEMENT
+## 3. CURRENT GOAL (FOCUS)
+
+BUILD THE COMPLETE USER INTERFACE.
+
+This includes:
+
+- Screens
+- Layout
+- Visual states
+- User flow
+- Buttons, forms, placeholders
+- Loading / empty / mock states (VISUAL ONLY)
+
+NO real error handling.
+NO backend refactor.
+NO robustness explanation.
+
+---
+
+## 4. NEXT FEATURE TO IMPLEMENT
 
 ### Description (WHAT)
 
-Clearly describe the feature to be implemented.
+Improve the visual feedback and user experience of the UI.
 
-Implement robust error handling and loading states for question fetching in `src/entities/question/api/fetch-question.ts`. This also involves fetching quiz categories dynamically from the Open Trivia Database API and using these categories to fetch quiz questions.
+This includes:
+- Adding animations and transitions between UI states (e.g., when an answer is selected).
+- Improving the visual design of the `QuestionCard` to provide clearer feedback for correct/incorrect answers.
+- Enhancing the `TimerDisplay` with more engaging visual cues.
+- General styling improvements to create a more polished and professional look and feel.
+
 
 ---
 
-### Mandatory Branch (WHERE)
+### Branch Policy
 
-A new branch MUST be created before any code change.
+A new branch MUST be created for UI work.
 
 Branch name:
-`feat/robust-question-fetching`
+`feat/ui-polish`
 
-Working on another branch is FORBIDDEN.
-
----
-
-### Allowed Files (SCOPE)
-
-ONLY these files may be modified:
-
-- src/entities/question/api/fetch-question.ts
-- src/entities/question/api/fetch-question.test.ts
-- src/entities/question/model/types.ts
-- src/features/quiz-config/ui/config-form.tsx (to use dynamic categories)
-- src/entities/question/api/fetch-categories.ts (new file)
-- src/entities/question/api/fetch-categories.test.ts (new file)
-
-
-Any file not listed here MUST NOT be changed.
+Only this branch is allowed.
 
 ---
 
-## 4. NEXT ACTION (EXECUTION ORDER)
+### Allowed Files (UI ONLY)
 
-The following steps MUST be executed in order.
-Skipping or reordering steps is NOT allowed.
+The agent MAY modify any UI-related file, including but not limited to:
 
-1. Create and switch to branch `feat/robust-question-fetching`
-2. Create `branch.md` for `feat/robust-question-fetching`
-3. Create `commit_feat-robust-question-fetching.md`
-4. Create `PR_feat-robust-question-fetching.md`
-5. Update `last_change_base.md` with commit and PR links.
+- src/pages/\*\*
+- src/features/\*\*
+- src/shared/ui/\*\*
+- src/entities/\*\* (UI usage only, no robustness)
+- src/app/styles/\*\*/index.css
 
----
-
-## 5. FORBIDDEN ACTIONS
-
-- Do NOT reimplement completed features
-- Do NOT modify protected components
-- Do NOT change the execution order
-- Do NOT invent new tasks
-- Do NOT refactor unrelated code
-- Do NOT commit outside the specified branch
+If unsure → assume UI change is allowed.
 
 ---
 
-## 6. PRE-EXECUTION CHECK (MANDATORY)
+## 5. EXECUTION ORDER
 
-Before writing any code, the agent MUST:
+1. Create and switch to branch `feat/ui-polish`
+2. Implement UI improvements as described above.
+3. Ensure the app is visually and functionally navigable.
+4. Update this file ONLY to describe UI progress.
 
-1. Restate the current state
-2. Name the branch it will create
-3. List the files it will modify
+DO NOT mark anything as FINAL.
 
-If any of these are incorrect → STOP.
+---
+
+## 6. FORBIDDEN ACTIONS
+
+- Do NOT talk about backend robustness
+- Do NOT block UI waiting for backend perfection
+- Do NOT freeze UI components
+- Do NOT invent non-UI constraints
+- Do NOT refactor logic “for later safety”
+
+---
+
+## 7. PRE-EXECUTION CHECK (MANDATORY)
+
+Before writing code, the agent MUST confirm:
+
+1. The goal is UI polishing and improvement.
+2. The branch is `feat/ui-polish`
+3. The work is iterative and non-final
+
+If not → STOP.
