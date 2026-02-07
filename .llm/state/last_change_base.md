@@ -49,6 +49,37 @@ NO UI is considered final.
 
 ---
 
+### 1.2 Completed Features (DO NOT TOUCH)
+
+- Feature name:
+  - Description:
+  - Status: COMPLETED
+  - Branch:
+  - Commit:
+
+Example:
+
+- quiz-config / ConfigForm
+  - Implemented ConfigForm UI
+  - Connected to useQuizConfigStore
+  - Uses hardcoded categories & difficulties
+  - Branch: feat/quiz-config
+  - Commit: ee7477e
+
+- home-quiz-config-integration
+  - Integrated `ConfigForm` into `home-page.tsx` and updated `fetchQuestions` to use values from `useQuizConfigStore`.
+  - Branch: `feat/home-quiz-config-integration`
+  - Commit: `9c7e171`
+  - PR: (To be filled after PR)
+
+- ui-build
+  - Implemented the complete UI flow for the Quiz Master application, covering the Home, Game, and Result pages.
+  - Branch: `feat/ui-build`
+  - Commit: `2fc4318`
+  - PR: (To be filled after PR)
+
+---
+
 ## 2. PROTECTED COMPONENTS
 
 ONLY logic-level features may be protected.
