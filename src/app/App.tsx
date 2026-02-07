@@ -1,34 +1,48 @@
-import { useState } from "react";
-import reactLogo from "@shared/assets/react.svg";
-import viteLogo from "/vite.svg";
+// src/app/App.tsx
+import React, { useState } from 'react';
+import { HomePage } from '@pages/home';
+import { GamePage } from '@pages/game';
+import { ResultPage } from '@pages/result';
+import { useQuizSessionStore } from '@entities/session/model/store';
+
+type Page = 'home' | 'game' | 'result';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const { isQuizOver } = useQuizSessionStore();
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+  const handleStartQuiz = () => {
+    setCurrentPage('game');
+  };
+
+  const handlePlayAgain = () => {
+    setCurrentPage('home');
+  };
+
+  const handleQuizEnd = () => {
+    setCurrentPage('result');
+  };
+
+  // This is a simple router. A more robust solution would use a library like react-router-dom.
+  // We also need to decide where the logic for page navigation lives.
+  // For now, we'll check the quiz state to decide which page to render.
+  
+  // This effect will automatically navigate to the result page when the quiz is over.
+  React.useEffect(() => {
+    if (isQuizOver) {
+      handleQuizEnd();
+    }
+  }, [isQuizOver]);
+
+  switch (currentPage) {
+    case 'game':
+      return <GamePage />;
+    case 'result':
+      return <ResultPage onPlayAgain={handlePlayAgain} />;
+    case 'home':
+    default:
+      return <HomePage onStartQuiz={handleStartQuiz} />;
+  }
 }
 
 export default App;
