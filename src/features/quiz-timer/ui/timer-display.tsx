@@ -1,0 +1,39 @@
+// src/features/quiz-timer/ui/timer-display.tsx
+import React, { useState, useEffect } from 'react';
+import { Typography } from '@shared/ui/typography';
+
+interface QuizTimerProps {
+  totalTime: number; // Time in seconds
+  onTimerEnd: () => void;
+}
+
+export const QuizTimer: React.FC<QuizTimerProps> = ({ totalTime, onTimerEnd }) => {
+  const [timeLeft, setTimeLeft] = useState(totalTime);
+
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      onTimerEnd();
+      return;
+    }
+
+    const timerId = setInterval(() => {
+      setTimeLeft((prevTime) => prevTime - 1);
+    }, 1000);
+
+    return () => clearInterval(timerId); // Cleanup on unmount or if timeLeft changes
+  }, [timeLeft, onTimerEnd]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  return (
+    <div className="flex items-center justify-center space-x-2">
+      <Typography variant="h4" className="text-2xl font-bold">
+        Time:
+      </Typography>
+      <Typography variant="h4" className={`text-2xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-green-500'}`}>
+        {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
+      </Typography>
+    </div>
+  );
+};
