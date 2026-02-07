@@ -1,5 +1,5 @@
 // src/entities/question/api/fetch-question.ts
-import { Question, QuestionState } from '../model/types';
+import type { Question, QuestionState } from '../model/types';
 
 // This would typically come from environment variables or a config file
 const API_BASE_URL = 'https://opentdb.com/api.php';
