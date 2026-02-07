@@ -1,23 +1,22 @@
 // src/entities/question/api/fetch-question.ts
 import type { Question, QuestionState } from '../model/types';
+import { useQuizConfigStore } from '@features/quiz-config/model/config-hooks'; // Import the store
 
 // This would typically come from environment variables or a config file
 const API_BASE_URL = 'https://opentdb.com/api.php';
 
 export const fetchQuestions = async (
   amount: number = 10,
-  difficulty?: 'easy' | 'medium' | 'hard',
-  category?: string
 ): Promise<QuestionState> => {
+  // Get category and difficulty from the store
+  const { category, difficulty } = useQuizConfigStore.getState();
   let url = `${API_BASE_URL}?amount=${amount}&type=multiple`;
 
   if (difficulty) {
     url += `&difficulty=${difficulty}`;
   }
-  if (category) {
-    // In a real application, you'd map category names to API IDs
-    // For now, assume category is the ID or directly usable
-    url += `&category=${category}`;
+  if (category && typeof category === 'object' && category.id) {
+    url += `&category=${category.id}`;
   }
 
   let state: QuestionState = {
