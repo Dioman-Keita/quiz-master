@@ -1,30 +1,32 @@
 // src/features/quiz-config/ui/config-form.tsx
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@shared/ui/card';
-import { Button } from '@shared/ui/button';
-import { Typography } from '@shared/ui/typography';
-import { useQuizConfigStore } from '../model/config-hooks';
-import type { QuizCategory, QuizDifficulty } from '../model/types';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
+import { Button } from "@shared/ui/button";
+import { Typography } from "@shared/ui/typography";
+import { useQuizConfigStore } from "../model/config-hooks";
+import type { QuizCategory, QuizDifficulty } from "../model/types";
 
 interface ConfigFormProps {
   onStartQuiz: () => void;
 }
 
 // Hardcoded categories and difficulties for now
-const difficulties: QuizDifficulty[] = ['', 'easy', 'medium', 'hard'];
+const difficulties: QuizDifficulty[] = ["", "easy", "medium", "hard"];
 const hardcodedCategories: QuizCategory[] = [
-  { id: '', name: 'Any Category' },
-  { id: '9', name: 'General Knowledge' },
-  { id: '10', name: 'Books' },
-  { id: '11', name: 'Film' },
-  { id: '12', name: 'Music' },
-  { id: '17', name: 'Science & Nature' },
-  { id: '18', name: 'Science: Computers' },
+  { id: "", name: "Any Category" },
+  { id: "9", name: "General Knowledge" },
+  { id: "10", name: "Books" },
+  { id: "11", name: "Film" },
+  { id: "12", name: "Music" },
+  { id: "17", name: "Science & Nature" },
+  { id: "18", name: "Science: Computers" },
 ];
 
 export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
-  const { category, difficulty, setCategory, setDifficulty } = useQuizConfigStore();
-  const [availableCategories, setAvailableCategories] = useState<QuizCategory[]>(hardcodedCategories);
+  const { category, difficulty, setCategory, setDifficulty } =
+    useQuizConfigStore();
+  const [availableCategories, _setAvailableCategories] =
+    useState<QuizCategory[]>(hardcodedCategories);
 
   // Future improvement: Fetch categories dynamically
   // useEffect(() => {
@@ -37,8 +39,10 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
 
   const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedId = e.target.value;
-    const selectedCat = availableCategories.find(cat => cat && cat.id === selectedId);
-    setCategory(selectedCat || '');
+    const selectedCat = availableCategories.find(
+      (cat) => cat && cat.id === selectedId,
+    );
+    setCategory(selectedCat || "");
   };
 
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -54,22 +58,26 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <Typography variant="small" className="block mb-2">Category:</Typography>
+          <Typography variant="small" className="block mb-2">
+            Category:
+          </Typography>
           <select
-            value={typeof category === 'object' ? category.id : category}
+            value={typeof category === "object" ? category.id : category}
             onChange={handleCategoryChange}
             className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {availableCategories.map((cat) => (
-              <option key={cat ? cat.id : ''} value={cat ? cat.id : ''}>
-                {cat ? cat.name : 'Any Category'}
+              <option key={cat ? cat.id : ""} value={cat ? cat.id : ""}>
+                {cat ? cat.name : "Any Category"}
               </option>
             ))}
           </select>
         </div>
 
         <div>
-          <Typography variant="small" className="block mb-2">Difficulty:</Typography>
+          <Typography variant="small" className="block mb-2">
+            Difficulty:
+          </Typography>
           <select
             value={difficulty}
             onChange={handleDifficultyChange}
@@ -77,7 +85,9 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
           >
             {difficulties.map((diff) => (
               <option key={diff} value={diff}>
-                {diff === '' ? 'Any Difficulty' : diff.charAt(0).toUpperCase() + diff.slice(1)}
+                {diff === ""
+                  ? "Any Difficulty"
+                  : diff.charAt(0).toUpperCase() + diff.slice(1)}
               </option>
             ))}
           </select>
