@@ -1,73 +1,102 @@
-# React + TypeScript + Vite
+# 🧠 Quiz Master – Interactive Quiz App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-18-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![Vite](https://img.shields.io/badge/Vite-5-purple)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-3-cyan)
+![Zustand](https://img.shields.io/badge/State-Zustand-orange)
 
-Currently, two official plugins are available:
+A high-performance interactive quiz application, built with a modern and scalable architecture (**Feature-Sliced Design**) aligned with industry standards in 2026.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- 🎯 **Custom Configuration**: Select category and difficulty level via API.
+- ⏱️ **Interactive Timer**: Per-question time management with visual feedback.
+- 📊 **Scoring System**: Real-time score calculation and results screen with percentage.
+- 🎨 **Visual Feedback**: Clear indicators (Green/Red) and responsive design (Glassmorphism).
+- 🔄 **Replayability**: Full game state reset without page reload.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🏗️ Technical Architecture (Feature-Sliced Design)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+This project follows the **FSD (Feature-Sliced Design)** methodology to ensure maintainability and scalability.  
+The codebase is structured by business domains (Slices) rather than technical layers.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📁 Project Structure
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+├── 📜 README.md
+├── 🟨 eslint.config.js
+├── 📄 index.html
+├── 🗂️ package-lock.json
+├── 🗂️ package.json
+├── 📁 public
+│   ├── 🖼️ vite.svg
+├── 📁 src
+│   ├── 📁 app                # Global configuration (Providers, Styles)
+│   │   ├── 🟦 App.tsx
+│   │   ├── 🟦 main.tsx
+│   │   ├── 📁 styles
+│   │   │   ├── 🎨 index.css
+│   ├── 📁 entities           # Business Logic & Data Model
+│   │   ├── 📁 question       # Question logic (API, Types)
+│   │   │   ├── 📁 api
+│   │   │   │   ├── 🟨 fetch-question.ts
+│   │   │   ├── 📁 lib
+│   │   │   │   ├── 🟨 decoder.ts
+│   │   │   ├── 📁 model
+│   │   │   │   ├── 🟨 types.ts
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 question-card.tsx
+│   │   ├── 📁 session        # State Management (Zustand)
+│   │   │   ├── 🟨 index.ts
+│   │   │   ├── 📁 lib
+│   │   │   │   ├── 🟨 score-logic.ts
+│   │   │   ├── 📁 model
+│   │   │   │   ├── 🟨 store.ts
+│   ├── 📁 features           # User Actions
+│   │   ├── 📁 answer-question
+│   │   │   ├── 🟨 index.ts
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 answer-list.tsx
+│   │   ├── 📁 quiz-config
+│   │   │   ├── 🟨 index.ts
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 config-form.tsx
+│   │   ├── 📁 quiz-timer
+│   │   │   ├── 🟨 index.ts
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 timer-display.tsx
+│   ├── 📁 pages              # Screen composition
+│   │   ├── 📁 game
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 game-page.tsx
+│   │   ├── 📁 home
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 home-page.tsx
+│   │   ├── 📁 result
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 result-page.tsx
+│   ├── 📁 shared             # Reusable utilities & UI Kit
+│   │   ├── 📁 api
+│   │   │   ├── 🟨 client.ts
+│   │   ├── 📁 lib
+│   │   │   ├── 🟨 cn.ts
+│   │   │   ├── 🟨 utils.ts
+│   │   ├── 📁 ui
+│   │   │   ├── 🟦 button.tsx
+│   │   │   ├── 🟦 card.tsx
+│   ├── 📁 widgets            # Complex UI blocks
+│   │   ├── 📁 quiz-board
+│   │   │   ├── 🟨 index.ts
+│   │   │   ├── 📁 ui
+│   │   │   │   ├── 🟦 quiz-board.tsx
+├── 🗂️ tsconfig.app.json
+├── 🗂️ tsconfig.json
+├── 🟨 vite.config.ts
 ```
