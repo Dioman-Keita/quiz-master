@@ -7,6 +7,11 @@ MODE: UI-FIRST DEVELOPMENT
 
 ---
 
+## IDENTITY RULE
+
+The agent is not allowed to change author, email,
+or signing identity under any circumstances.
+
 ## ABSOLUTE RULES (NON NEGOTIABLE)
 
 - The goal is to BUILD THE FULL UI.
@@ -24,6 +29,21 @@ FORBIDDEN TOPICS:
 If mentioned → STOP.
 
 ---
+
+## GPG SIGNING RULE (CRITICAL)
+
+All commits made on behalf of the user MUST be GPG signed.
+
+Forbidden actions:
+
+- Using --no-gpg-sign
+- Disabling commit.gpgsign
+- Modifying GPG-related git configuration
+
+If a GPG-signed commit cannot be created:
+
+- The agent MUST NOT commit
+- The agent MUST ask the user for guidance
 
 ## 1. CURRENT PROJECT STATE
 
@@ -62,10 +82,8 @@ These elements EXIST but are NOT complete and MAY be modified freely.
   - `aria-live="polite"` added to `QuestionCard` title for screen reader announcements.
   - Color contrast and font sizes reviewed for readability.
 
-- **Status**: UI ITERATION
+- **Status**: UI Iteration (consideration for next phase)
 - **Modifiable**: YES
-
-NO UI is considered final.
 
 ---
 
@@ -104,6 +122,12 @@ Example:
   - Commit: `226e422`
   - PR: `.llm/features/ui-refinements/PR_feat-ui-refinements.md`
 
+- ui-responsive-a11y
+  - Enhanced UI responsiveness for various screen sizes and improved accessibility.
+  - Branch: `feat/ui-responsive-a11y`
+  - Commit: (To be filled after commit)
+  - PR: (To be filled after PR)
+
 ---
 
 ## 2. PROTECTED COMPONENTS
@@ -141,59 +165,60 @@ NO robustness explanation.
 
 ### Description (WHAT)
 
-Final UI review and minor adjustments.
+Implement robust question fetching.
 
-This includes:
-- A final pass on all UI elements to catch any lingering inconsistencies in spacing, alignment, or visual design.
-- Small tweaks to animations or transitions if needed.
-- Ensuring all text is clear and legible.
-- Overall polish to ensure a high-quality user interface.
+This involves:
+
+- Fetching quiz categories dynamically from the Open Trivia Database API.
+- Updating `ConfigForm` to use the dynamically fetched categories.
+- Enhancing the `fetch-question.ts` API to use the selected category and difficulty from the `useQuizConfigStore` to fetch quiz questions.
+- Implementing robust error handling and loading states for `fetch-question.ts`.
+- Adding unit tests for new API utilities and updating existing tests.
 
 ---
 
 ### Branch Policy
 
-A new branch MUST be created for UI work.
+A new branch MUST be created for this feature.
 
 Branch name:
-`feat/ui-final-polish`
+`feat/robust-question-fetching`
 
 Only this branch is allowed.
 
 ---
 
-### Allowed Files (UI ONLY)
+### Allowed Files (SCOPE)
 
-The agent MAY modify any UI-related file, including but not limited to:
+The agent MAY modify any related file, including but not limited to:
 
-- src/pages/\*\*
-- src/features/\*\*
-- src/shared/ui/\*\*
-- src/entities/\*\* (UI usage only, no robustness)
-- src/app/styles/\*\*/index.css
-
-If unsure → assume UI change is allowed.
+- src/entities/question/api/fetch-question.ts
+- src/entities/question/api/fetch-question.test.ts
+- src/entities/question/model/types.ts
+- src/features/quiz-config/ui/config-form.tsx
+- src/entities/question/api/fetch-categories.ts (new file)
+- src/entities/question/api/fetch-categories.test.ts (new file)
 
 ---
 
 ## 5. EXECUTION ORDER
 
-1. Create and switch to branch `feat/ui-final-polish`
-2. Implement final UI review and minor adjustments as described above.
-3. Ensure the app is visually and functionally navigable.
-4. Update this file ONLY to describe UI progress.
-
-DO NOT mark anything as FINAL.
+1. Create and switch to branch `feat/robust-question-fetching`
+2. Implement dynamic category fetching and update `ConfigForm`.
+3. Enhance `fetch-question.ts` for robust question fetching with error handling and loading states.
+4. Add unit tests.
+5. Update this file ONLY to describe progress.
 
 ---
 
 ## 6. FORBIDDEN ACTIONS
 
-- Do NOT talk about backend robustness
-- Do NOT block UI waiting for backend perfection
-- Do NOT freeze UI components
-- Do NOT invent non-UI constraints
-- Do NOT refactor logic “for later safety”
+- Do NOT reimplement completed features.
+- Do NOT modify protected components (except as explicitly allowed in allowed files).
+- Do NOT change the execution order.
+- Do NOT invent new tasks.
+- Do NOT refactor unrelated code.
+- Do NOT commit outside the specified branch.
 
 ---
 
@@ -201,8 +226,8 @@ DO NOT mark anything as FINAL.
 
 Before writing code, the agent MUST confirm:
 
-1. The goal is UI polishing and improvement.
-2. The branch is `feat/ui-final-polish`
-3. The work is iterative and non-final
+1. The goal is backend robustness and dynamic data fetching.
+2. The branch is `feat/robust-question-fetching`.
+3. The work is focused on the described scope.
 
 If not → STOP.
