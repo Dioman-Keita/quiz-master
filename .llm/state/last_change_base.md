@@ -88,6 +88,12 @@ Example:
   - Commit: `2fc4318`
   - PR: (To be filled after PR)
 
+- ui-refinements
+  - Refined UI interactions and added micro-animations, including subtle hover effects, screen transitions, and distinct visual feedback for answers.
+  - Branch: `feat/ui-refinements`
+  - Commit: `226e422`
+  - PR: (To be filled after PR)
+
 ---
 
 ## 2. PROTECTED COMPONENTS

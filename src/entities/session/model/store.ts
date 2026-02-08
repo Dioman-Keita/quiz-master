@@ -1,6 +1,6 @@
 // src/entities/session/model/store.ts
-import { create } from 'zustand';
-import { QuizSessionStore } from './types';
+import { create } from "zustand";
+import { type QuizSessionStore } from "./types";
 
 export const useQuizSessionStore = create<QuizSessionStore>((set) => ({
   score: 0,
@@ -9,8 +9,10 @@ export const useQuizSessionStore = create<QuizSessionStore>((set) => ({
   isQuizOver: false,
 
   incrementScore: () => set((state) => ({ score: state.score + 1 })),
-  incrementQuestionIndex: () => set((state) => ({ questionIndex: state.questionIndex + 1 })),
-  incrementAnsweredQuestions: () => set((state) => ({ answeredQuestions: state.answeredQuestions + 1 })),
+  incrementQuestionIndex: () =>
+    set((state) => ({ questionIndex: state.questionIndex + 1 })),
+  incrementAnsweredQuestions: () =>
+    set((state) => ({ answeredQuestions: state.answeredQuestions + 1 })),
   setQuizOver: (isOver: boolean) => set(() => ({ isQuizOver: isOver })),
   resetSession: () =>
     set(() => ({
