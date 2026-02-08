@@ -72,13 +72,14 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
     if (selectedAnswer === null) {
       return ""; // No answer selected yet
     }
+    // If an answer is selected, apply feedback
     if (option === correctAnswer) {
-      return "bg-green-500 hover:bg-green-600 text-white"; // Correct answer
+      return "bg-green-500 text-white animate-correct-answer"; // Correct answer
     }
     if (option === selectedAnswer) {
-      return "bg-red-500 hover:bg-red-600 text-white"; // Incorrectly selected answer
+      return "bg-red-500 text-white animate-incorrect-answer"; // Incorrectly selected answer
     }
-    return ""; // Other options
+    return "opacity-50"; // Other unselected options fade out
   };
 
   return (
@@ -94,10 +95,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         {question.options.map((option, index) => (
           <Button
             key={index}
-            className={`w-full py-3 rounded-md transition-colors duration-200
+            className={`w-full py-3 rounded-md transition-all duration-200 ease-in-out
               ${getButtonClass(option)}
-              ${selectedAnswer && option !== selectedAnswer && option !== correctAnswer ? "opacity-50" : ""}
-              ${selectedAnswer ? "cursor-not-allowed" : "hover:bg-gray-700 bg-gray-600"}
+              ${selectedAnswer ? "cursor-not-allowed" : "hover:bg-gray-700 bg-gray-600 hover:scale-[1.02]"}
             `}
             onClick={() => !selectedAnswer && onAnswerSelected(option)}
             disabled={selectedAnswer !== null}

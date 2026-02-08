@@ -95,7 +95,7 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
 
         <Button
           onClick={onStartQuiz}
-          className="w-full py-3 rounded-md bg-purple-600 hover:bg-purple-700 text-white font-bold"
+          className="w-full py-3 rounded-md bg-purple-600 hover:bg-purple-700 text-white font-bold transition-all duration-200 ease-in-out hover:scale-[1.02]"
         >
           <Typography variant="large">Start Quiz</Typography>
         </Button>

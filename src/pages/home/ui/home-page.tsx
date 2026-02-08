@@ -12,7 +12,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onStartQuiz }) => {
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
       <LayoutHeader />
-      <main className="flex flex-col items-center justify-center space-y-8 grow">
+      <main className="flex flex-col items-center justify-center space-y-8 grow animate-fade-in">
         <Typography
           variant="h1"
           className="text-5xl font-extrabold text-center"

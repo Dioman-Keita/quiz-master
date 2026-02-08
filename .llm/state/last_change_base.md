@@ -42,6 +42,16 @@ These elements EXIST but are NOT complete and MAY be modified freely.
   - `QuizBoard`: The main component for the quiz game.
   - `SummaryCard`: Displays the quiz results.
 
+- **Styling**:
+  - `QuestionCard`: Provides visual feedback for correct/incorrect answers, now with conditional pulse/shake animations.
+  - `TimerDisplay`: Enhanced with larger font and pulsating animation for low time.
+  - `Card`: Applied Glassmorphism effect.
+  - Global styles (`index.css`): Added a dynamic gradient background to the body, and keyframe animations for fade-in, correct-answer-pulse, and incorrect-answer-shake.
+
+- **Interactions**:
+  - Subtle scale effect on hover added to interactive buttons (Question options, Start Quiz, Play Again, Retry Fetching Question).
+  - Simple fade-in animation applied to main content areas of `HomePage`, `GamePage`, and `ResultPage`.
+
 - **Status**: UI ITERATION
 - **Modifiable**: YES
 
@@ -76,6 +86,12 @@ Example:
   - Implemented the complete UI flow for the Quiz Master application, covering the Home, Game, and Result pages.
   - Branch: `feat/ui-build`
   - Commit: `2fc4318`
+  - PR: (To be filled after PR)
+
+- ui-refinements
+  - Refined UI interactions and added micro-animations, including subtle hover effects, screen transitions, and distinct visual feedback for answers.
+  - Branch: `feat/ui-refinements`
+  - Commit: `226e422`
   - PR: (To be filled after PR)
 
 ---
@@ -115,14 +131,13 @@ NO robustness explanation.
 
 ### Description (WHAT)
 
-Improve the visual feedback and user experience of the UI.
+Enhance UI responsiveness and add accessibility improvements.
 
 This includes:
-- Adding animations and transitions between UI states (e.g., when an answer is selected).
-- Improving the visual design of the `QuestionCard` to provide clearer feedback for correct/incorrect answers.
-- Enhancing the `TimerDisplay` with more engaging visual cues.
-- General styling improvements to create a more polished and professional look and feel.
-
+- Optimizing layout for various screen sizes (mobile, tablet, desktop) using Tailwind CSS responsive utilities.
+- Ensuring all interactive elements are keyboard navigable and have appropriate ARIA attributes.
+- Improving focus management for a smoother user experience, especially during quiz flow.
+- Reviewing color contrast and font sizes for better readability.
 
 ---
 
@@ -131,7 +146,7 @@ This includes:
 A new branch MUST be created for UI work.
 
 Branch name:
-`feat/ui-polish`
+`feat/ui-responsive-a11y`
 
 Only this branch is allowed.
 
@@ -153,8 +168,8 @@ If unsure → assume UI change is allowed.
 
 ## 5. EXECUTION ORDER
 
-1. Create and switch to branch `feat/ui-polish`
-2. Implement UI improvements as described above.
+1. Create and switch to branch `feat/ui-responsive-a11y`
+2. Implement UI responsiveness and accessibility improvements as described above.
 3. Ensure the app is visually and functionally navigable.
 4. Update this file ONLY to describe UI progress.
 
@@ -177,7 +192,7 @@ DO NOT mark anything as FINAL.
 Before writing code, the agent MUST confirm:
 
 1. The goal is UI polishing and improvement.
-2. The branch is `feat/ui-polish`
+2. The branch is `feat/ui-responsive-a11y`
 3. The work is iterative and non-final
 
 If not → STOP.
