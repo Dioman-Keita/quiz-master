@@ -2,9 +2,17 @@
 declare var global: any;
 import { fetchQuestions } from "./fetch-question";
 import type { Question } from "../model/types";
+import { useQuizConfigStore } from "@features/quiz-config/model/config-hooks"; // Import the store
 
 // Mock the global fetch function
 global.fetch = jest.fn();
+
+// Mock useQuizConfigStore
+jest.mock("@features/quiz-config/model/config-hooks", () => ({
+  useQuizConfigStore: {
+    getState: jest.fn(),
+  },
+}));
 
 describe("fetchQuestions", () => {
   const mockSuccessResponse = {
@@ -41,6 +49,11 @@ describe("fetchQuestions", () => {
 
   beforeEach(() => {
     (fetch as jest.Mock).mockClear();
+    // Default mock for useQuizConfigStore
+    (useQuizConfigStore.getState as jest.Mock).mockReturnValue({
+      category: { id: "18", name: "Science: Computers" },
+      difficulty: "easy",
+    });
   });
 
   it("should return isLoading true initially and then data on success", async () => {
@@ -51,7 +64,7 @@ describe("fetchQuestions", () => {
       }),
     );
 
-    const promise = fetchQuestions(1, "easy", "18"); // category '18' for Science: Computers
+    const promise = fetchQuestions(1);
 
     // Initial state check
     expect((await promise).isLoading).toBe(false); // After await, it should be false
@@ -68,7 +81,7 @@ describe("fetchQuestions", () => {
       }),
     );
 
-    const result = await fetchQuestions(1, "easy", "18");
+    const result = await fetchQuestions(1);
 
     expect(result.isLoading).toBe(false);
     expect(result.data).toBeNull();
@@ -82,7 +95,7 @@ describe("fetchQuestions", () => {
       Promise.reject(networkError),
     );
 
-    const result = await fetchQuestions(1, "easy", "18");
+    const result = await fetchQuestions(1);
 
     expect(result.isLoading).toBe(false);
     expect(result.data).toBeNull();

@@ -125,8 +125,8 @@ Example:
 - ui-responsive-a11y
   - Enhanced UI responsiveness for various screen sizes and improved accessibility.
   - Branch: `feat/ui-responsive-a11y`
-  - Commit: (To be filled after commit)
-  - PR: (To be filled after PR)
+  - Commit: `e687205`
+  - PR: `.llm/features/ui-responsive-a11y/PR_feat-ui-responsive-a11y.md`
 
 ---
 
