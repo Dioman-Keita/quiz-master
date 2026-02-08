@@ -52,6 +52,16 @@ These elements EXIST but are NOT complete and MAY be modified freely.
   - Subtle scale effect on hover added to interactive buttons (Question options, Start Quiz, Play Again, Retry Fetching Question).
   - Simple fade-in animation applied to main content areas of `HomePage`, `GamePage`, and `ResultPage`.
 
+- **Responsiveness**:
+  - Layouts optimized for various screen sizes (`HomePage`, `ConfigForm`, `QuestionCard`, `SummaryCard`).
+  - Responsive font sizes for main titles.
+
+- **Accessibility**:
+  - Interactive elements (buttons, selects) are keyboard navigable.
+  - `aria-label` attributes added to `select` elements in `ConfigForm`.
+  - `aria-live="polite"` added to `QuestionCard` title for screen reader announcements.
+  - Color contrast and font sizes reviewed for readability.
+
 - **Status**: UI ITERATION
 - **Modifiable**: YES
 
@@ -92,7 +102,7 @@ Example:
   - Refined UI interactions and added micro-animations, including subtle hover effects, screen transitions, and distinct visual feedback for answers.
   - Branch: `feat/ui-refinements`
   - Commit: `226e422`
-  - PR: (To be filled after PR)
+  - PR: `.llm/features/ui-refinements/PR_feat-ui-refinements.md`
 
 ---
 
@@ -131,13 +141,13 @@ NO robustness explanation.
 
 ### Description (WHAT)
 
-Enhance UI responsiveness and add accessibility improvements.
+Final UI review and minor adjustments.
 
 This includes:
-- Optimizing layout for various screen sizes (mobile, tablet, desktop) using Tailwind CSS responsive utilities.
-- Ensuring all interactive elements are keyboard navigable and have appropriate ARIA attributes.
-- Improving focus management for a smoother user experience, especially during quiz flow.
-- Reviewing color contrast and font sizes for better readability.
+- A final pass on all UI elements to catch any lingering inconsistencies in spacing, alignment, or visual design.
+- Small tweaks to animations or transitions if needed.
+- Ensuring all text is clear and legible.
+- Overall polish to ensure a high-quality user interface.
 
 ---
 
@@ -146,7 +156,7 @@ This includes:
 A new branch MUST be created for UI work.
 
 Branch name:
-`feat/ui-responsive-a11y`
+`feat/ui-final-polish`
 
 Only this branch is allowed.
 
@@ -168,8 +178,8 @@ If unsure → assume UI change is allowed.
 
 ## 5. EXECUTION ORDER
 
-1. Create and switch to branch `feat/ui-responsive-a11y`
-2. Implement UI responsiveness and accessibility improvements as described above.
+1. Create and switch to branch `feat/ui-final-polish`
+2. Implement final UI review and minor adjustments as described above.
 3. Ensure the app is visually and functionally navigable.
 4. Update this file ONLY to describe UI progress.
 
@@ -192,7 +202,7 @@ DO NOT mark anything as FINAL.
 Before writing code, the agent MUST confirm:
 
 1. The goal is UI polishing and improvement.
-2. The branch is `feat/ui-responsive-a11y`
+2. The branch is `feat/ui-final-polish`
 3. The work is iterative and non-final
 
 If not → STOP.

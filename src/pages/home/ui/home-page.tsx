@@ -15,7 +15,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onStartQuiz }) => {
       <main className="flex flex-col items-center justify-center space-y-8 grow animate-fade-in">
         <Typography
           variant="h1"
-          className="text-5xl font-extrabold text-center"
+          className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center"
         >
           Quiz Master
         </Typography>

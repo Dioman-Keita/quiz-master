@@ -12,7 +12,7 @@ export const SummaryCard: React.FC<SummaryCardProps> = ({ score, totalQuestions 
   const percentage = totalQuestions > 0 ? (score / totalQuestions) * 100 : 0;
 
   return (
-    <Card className="w-87.5 mx-auto bg-gray-800 text-white shadow-xl rounded-lg p-6 text-center">
+    <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto bg-gray-800 text-white shadow-xl rounded-lg p-6 text-center">
       <CardHeader>
         <CardTitle>
           <Typography variant="h3">Quiz Complete!</Typography>
