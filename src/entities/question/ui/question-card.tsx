@@ -26,7 +26,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <Card className="w-87.5 mx-auto">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
         <CardHeader>
           <CardTitle>Loading Question...</CardTitle>
         </CardHeader>
@@ -41,7 +41,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   if (isError) {
     return (
-      <Card className="w-87.5 mx-auto">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
         <CardHeader>
           <CardTitle className="text-red-500">Error</CardTitle>
         </CardHeader>
@@ -55,7 +55,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
   if (!question) {
     return (
-      <Card className="w-87.5 mx-auto">
+      <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
         <CardHeader>
           <CardTitle>No Question Available</CardTitle>
         </CardHeader>
@@ -83,9 +83,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   };
 
   return (
-    <Card className="w-87.5 mx-auto bg-gray-800 text-white shadow-xl rounded-lg">
+    <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto bg-gray-800 text-white shadow-xl rounded-lg">
       <CardHeader>
-        <CardTitle className="text-xl font-bold text-center">
+        <CardTitle className="text-xl font-bold text-center" aria-live="polite">
           <Typography variant="h4">
             {decodeURIComponent(question.question)}
           </Typography>

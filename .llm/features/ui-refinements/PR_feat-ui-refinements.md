@@ -15,6 +15,8 @@ To improve the overall user experience and create a more polished and engaging a
 -   **Answer Feedback**: Introduced distinct `correct-answer-pulse` and `incorrect-answer-shake` animations for `QuestionCard` options, providing immediate visual feedback on answer selection.
 -   **Styling**: Applied Glassmorphism to the `Card` component for a modern aesthetic and added global gradient background to the `body`.
 -   **Consistency**: Reviewed and maintained consistent spacing and alignment across major UI components.
+-   **Responsiveness**: Optimized layout for various screen sizes and adjusted responsive font sizes for main titles.
+-   **Accessibility**: Ensured interactive elements are keyboard navigable, added `aria-label` to select elements, and `aria-live="polite"` to `QuestionCard` title.
 
 ## How to Test
 
@@ -24,6 +26,8 @@ To improve the overall user experience and create a more polished and engaging a
 4.  On the Game page, hover over the question options, "Next Question", "Retry Fetching Question", and "Play Again" buttons. Observe the subtle scale effect.
 5.  Select an answer on the `QuestionCard`. Observe the distinct pulse animation for a correct answer and a shake animation for an incorrect answer.
 6.  On the Result page, hover over the "Play Again" button. Observe the subtle scale effect.
+7.  Resize the browser window to observe responsiveness of `ConfigForm`, `QuestionCard`, and `SummaryCard`.
+8.  Test keyboard navigation using `Tab` key to ensure all interactive elements are reachable.
 
 ## Risks and Side Effects
 
@@ -32,4 +36,4 @@ To improve the overall user experience and create a more polished and engaging a
 
 ## NEXT ACTION
 
-Update `last_change_base.md` to reflect the completion of the `feat/ui-refinements` feature (with commit hash `226e422`) and define the next feature to implement, which is `feat/ui-responsive-a11y`.
+Update `last_change_base.md` to reflect that this PR is ready and link to it. Then, proceed with the next step for `feat/ui-final-polish`.

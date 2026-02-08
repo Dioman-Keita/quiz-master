@@ -58,10 +58,8 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <Typography variant="small" className="block mb-2">
-            Category:
-          </Typography>
           <select
+            aria-label="Select Category"
             value={typeof category === "object" ? category.id : category}
             onChange={handleCategoryChange}
             className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -75,10 +73,8 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
         </div>
 
         <div>
-          <Typography variant="small" className="block mb-2">
-            Difficulty:
-          </Typography>
           <select
+            aria-label="Select Difficulty"
             value={difficulty}
             onChange={handleDifficultyChange}
             className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
