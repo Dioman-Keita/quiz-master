@@ -37,12 +37,16 @@ export const QuizTimer: React.FC<QuizTimerProps> = ({ totalTime, onTimerEnd }) =
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
+  const timerClass = `text-4xl font-extrabold ${
+    timeLeft <= 10 ? 'text-red-500 animate-pulse' : 'text-green-500'
+  }`;
+
   return (
-    <div className="flex items-center justify-center space-x-2">
-      <Typography variant="h4" className="text-2xl font-bold">
+    <div className="flex items-center justify-center space-x-4">
+      <Typography variant="h3" className="text-4xl font-extrabold">
         Time:
       </Typography>
-      <Typography variant="h4" className={`text-2xl font-bold ${timeLeft <= 10 ? 'text-red-500' : 'text-green-500'}`}>
+      <Typography variant="h3" className={timerClass}>
         {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
       </Typography>
     </div>

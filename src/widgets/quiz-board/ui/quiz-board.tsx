@@ -102,7 +102,7 @@ export const QuizBoard: React.FC = () => {
             <Typography variant="h4" className="mb-4">
               Quiz Over! Your final score is {score}.
             </Typography>
-            <Button onClick={handlePlayAgain} className="mt-4 px-6 py-2 bg-green-600 hover:bg-green-700 rounded-md">
+            <Button onClick={handlePlayAgain} className="mt-4 px-6 py-2 bg-green-600 hover:bg-green-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]">
               Play Again
             </Button>
           </div>
@@ -167,7 +167,7 @@ export const QuizBoard: React.FC = () => {
             {questionState.isError && (
               <Button
                 onClick={getQuestion}
-                className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md"
+                className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]"
               >
                 Retry Fetching Question
               </Button>
@@ -187,7 +187,7 @@ export const QuizBoard: React.FC = () => {
                 )}
                 <Button
                   onClick={getQuestion}
-                  className="mt-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-md"
+                  className="mt-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]"
                 >
                   Next Question
                 </Button>

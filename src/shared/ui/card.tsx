@@ -10,6 +10,8 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       ref={ref}
       className={cn(
         'rounded-lg border bg-card text-card-foreground shadow-sm',
+        // Add Glassmorphism styles
+        'backdrop-blur-sm bg-white/10 border-white/20', // New styles
         className
       )}
       {...props}
