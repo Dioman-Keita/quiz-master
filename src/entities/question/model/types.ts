@@ -5,12 +5,12 @@ export type Question = {
   question: string;
   options: string[];
   correctAnswer: string;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   category: string;
 };
 
 export type QuestionState = {
-  data: Question | null;
+  data: Question[] | null;
   isLoading: boolean;
   isError: boolean;
   error: string | null;

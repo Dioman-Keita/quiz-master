@@ -68,7 +68,7 @@ describe("fetchQuestions", () => {
 
     // Initial state check
     expect((await promise).isLoading).toBe(false); // After await, it should be false
-    expect((await promise).data).toEqual(mockQuestion);
+    expect((await promise).data).toEqual([mockQuestion]); // Expect array
     expect((await promise).isError).toBe(false);
     expect((await promise).error).toBeNull();
   });
@@ -114,8 +114,28 @@ describe("fetchQuestions", () => {
     const result = await fetchQuestions(1);
 
     expect(result.isLoading).toBe(false);
-    expect(result.data).toBeNull();
+    expect(result.data).toBeNull(); // Or [] depending on implementation, but fetchQuestions returns null for empty
     expect(result.isError).toBe(false);
     expect(result.error).toBeNull();
+  });
+
+  it("should NOT cache if partial response received", async () => {
+    // Request 10 questions
+    const amount = 10;
+
+    // Mock response with only 1 question
+    (fetch as jest.Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(mockSuccessResponse), // returns 1 question
+      }),
+    );
+
+    const setItemSpy = jest.spyOn(Storage.prototype, "setItem");
+
+    await fetchQuestions(amount);
+
+    expect(setItemSpy).not.toHaveBeenCalled();
+    setItemSpy.mockRestore();
   });
 });
