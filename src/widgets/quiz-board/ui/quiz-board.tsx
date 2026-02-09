@@ -12,6 +12,8 @@ import { useQuizSessionStore } from "@entities/session/model/store";
 import { SummaryCard } from "@widgets/result-summary/ui/summary-card";
 import { checkAnswer } from "@entities/session/lib/score-logic";
 
+const QUIZ_LENGTH = 10;
+
 export const QuizBoard: React.FC = () => {
   const { t } = useTranslation();
   const [questionState, setQuestionState] = useState<QuestionState>({
@@ -31,6 +33,9 @@ export const QuizBoard: React.FC = () => {
 
   const [hasInitialQuestionFetched, setHasInitialQuestionFetched] =
     useState(false); // New state for API rate limit fix
+  const [quizEndReason, setQuizEndReason] = useState<
+    "timeout" | "completed" | null
+  >(null);
 
   const {
     score,
@@ -73,7 +78,7 @@ export const QuizBoard: React.FC = () => {
       setTimerKey((prevKey) => prevKey + 1);
       answeredRef.current = false; // Reset useRef for new question (Issue 1)
 
-      const result = await fetchQuestions(10, refresh);
+      const result = await fetchQuestions(QUIZ_LENGTH, refresh);
 
       // Removed setQuizOver(true) here for API error handling (New Issue)
       setQuestionState(result);
@@ -113,11 +118,11 @@ export const QuizBoard: React.FC = () => {
       !currentQuestion ||
       selectedAnswer !== null ||
       isQuizOver ||
-      answeredRef.current // Use useRef here (Issue 1)
+      answeredRef.current
     )
       return;
 
-    answeredRef.current = true; // Set useRef to true immediately (Issue 1)
+    answeredRef.current = true;
     setSelectedAnswer(answer);
     const correct = checkAnswer(answer, currentQuestion.correctAnswer);
     setAnsweredCorrectly(correct);
@@ -129,32 +134,32 @@ export const QuizBoard: React.FC = () => {
     incrementAnsweredQuestions();
 
     // Check if we've reached the end of the batch
-    const batchSize = questionState.data?.length || 10;
+    const batchSize = questionState.data?.length || QUIZ_LENGTH;
     const nextIndex = questionIndex + 1;
 
     if (nextIndex >= batchSize) {
-      // End of quiz - show summary
-      setTimeout(() => {
-        setQuizOver(true);
-      }, 1500);
-    } else {
-      // More questions available - load next
-      setTimeout(() => {
-        getQuestion(false);
-      }, 1500);
+      // End of quiz - mark as completed
+      setQuizEndReason("completed");
+      setQuizOver(true);
     }
+    // No auto-advance - user must click Next Question button
   };
 
   const handleTimerEnd = useCallback(() => {
+    setQuizEndReason("timeout");
     setQuizOver(true);
   }, [setQuizOver]);
 
   const handlePlayAgain = () => {
-    resetSession(); // Reset session when playing again (Issue 3)
+    resetSession();
     setQuizOver(false);
-    setHasInitialQuestionFetched(false); // Allow a new initial fetch for the new quiz
-    // We want fresh questions for a new game
+    setQuizEndReason(null);
+    setHasInitialQuestionFetched(false);
     getQuestion(true);
+  };
+
+  const handleNextQuestion = () => {
+    getQuestion(false);
   };
 
   return (
@@ -167,25 +172,32 @@ export const QuizBoard: React.FC = () => {
       </div>
 
       <div className="mb-6">
-        {/* Conditional render for timer (New Issue) */}
         {!isQuizOver && !questionState.isError ? (
           <QuizTimer
             key={timerKey}
             totalTime={30}
             onTimerEnd={handleTimerEnd}
           />
-        ) : (
+        ) : isQuizOver && quizEndReason === "timeout" ? (
           <Typography variant="h3" className="text-red-500">
             {t("feedback.times_up")}
           </Typography>
-        )}
+        ) : isQuizOver && quizEndReason === "completed" ? (
+          <Typography variant="h3" className="text-green-500">
+            {t("feedback.quiz_complete")}
+          </Typography>
+        ) : questionState.isError ? (
+          <Typography variant="h3" className="text-red-500">
+            {t("feedback.error")}
+          </Typography>
+        ) : null}
       </div>
 
       {isQuizOver ? (
         <div className="text-center">
           <SummaryCard
             score={score}
-            totalQuestions={questionState.data?.length || 10}
+            totalQuestions={questionState.data?.length || QUIZ_LENGTH}
           />
           <Button
             onClick={handlePlayAgain}
@@ -218,9 +230,7 @@ export const QuizBoard: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <Typography variant="p">
-                  {t("feedback.failed_to_load_question", {
-                    error: questionState.error,
-                  })}
+                  {questionState.error || t("feedback.failed_to_load_question")}
                 </Typography>
                 <Typography variant="p">
                   {t("feedback.try_again_later")}
@@ -284,7 +294,7 @@ export const QuizBoard: React.FC = () => {
                 </Typography>
               )}
               <Button
-                onClick={() => getQuestion(false)}
+                onClick={handleNextQuestion}
                 className="mt-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]"
               >
                 {t("common.next_question")}

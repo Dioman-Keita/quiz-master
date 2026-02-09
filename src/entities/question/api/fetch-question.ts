@@ -7,6 +7,7 @@ const API_BASE_URL = "https://opentdb.com/api.php";
 
 // Cache configuration
 const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+const DEFAULT_QUIZ_LENGTH = 10;
 
 interface CachedQuestionData {
   timestamp: number;
@@ -22,7 +23,7 @@ const getCacheKey = (
 };
 
 export const fetchQuestions = async (
-  amount: number = 10,
+  amount: number = DEFAULT_QUIZ_LENGTH,
   forceRefresh: boolean = false,
 ): Promise<QuestionState> => {
   // Get category and difficulty from the store
@@ -48,27 +49,28 @@ export const fetchQuestions = async (
     const cachedDataString = sessionStorage.getItem(cacheKey);
 
     if (forceRefresh) {
-      console.log("Force refresh requested, clearing cache for key:", cacheKey);
       sessionStorage.removeItem(cacheKey);
     } else if (cachedDataString) {
-      const cachedData: CachedQuestionData = JSON.parse(cachedDataString);
-      if (Date.now() - cachedData.timestamp < CACHE_DURATION_MS) {
-        console.log("Fetching questions from cache for key:", cacheKey);
-        state = {
-          data: cachedData.questions,
-          isLoading: false,
-          isError: false,
-          error: null,
-        };
-        return state;
-      } else {
-        console.log("Cached questions expired for key:", cacheKey);
-        sessionStorage.removeItem(cacheKey); // Remove stale cache
+      try {
+        const cachedData: CachedQuestionData = JSON.parse(cachedDataString);
+        if (Date.now() - cachedData.timestamp < CACHE_DURATION_MS) {
+          state = {
+            data: cachedData.questions,
+            isLoading: false,
+            isError: false,
+            error: null,
+          };
+          return state;
+        } else {
+          sessionStorage.removeItem(cacheKey); // Remove stale cache
+        }
+      } catch (parseError) {
+        // Corrupt cache data - remove it and proceed to fresh fetch
+        sessionStorage.removeItem(cacheKey);
       }
     }
 
     // 2. If not in cache or expired, proceed with API fetch
-    console.log("Fetching questions from API for key:", cacheKey);
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -115,10 +117,6 @@ export const fetchQuestions = async (
         cacheKey,
         JSON.stringify({ timestamp: Date.now(), questions }),
       );
-    } else {
-      console.warn(
-        `API returned ${questions.length} questions, but ${amount} were requested. Not caching partial response.`,
-      );
     }
 
     state = {
@@ -128,12 +126,22 @@ export const fetchQuestions = async (
       error: null,
     };
   } catch (error: any) {
-    console.error("Failed to fetch questions:", error);
+    // Map internal errors to user-friendly messages
+    let userMessage = "Unable to load questions. Please try again.";
+
+    if (error.message?.includes("No questions found")) {
+      userMessage =
+        "No questions available for this category. Please try different options.";
+    } else if (error.message?.includes("HTTP error")) {
+      userMessage =
+        "Network error. Please check your connection and try again.";
+    }
+
     state = {
       data: null,
       isLoading: false,
       isError: true,
-      error: error.message || "Failed to fetch questions",
+      error: userMessage,
     };
   } finally {
     return state;

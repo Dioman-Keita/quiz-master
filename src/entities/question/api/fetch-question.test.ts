@@ -15,6 +15,10 @@ jest.mock("@features/quiz-config/model/config-hooks", () => ({
 }));
 
 describe("fetchQuestions", () => {
+  beforeEach(() => {
+    // Clear sessionStorage before each test to ensure isolation
+    sessionStorage.clear();
+  });
   const mockSuccessResponse = {
     response_code: 0,
     results: [
