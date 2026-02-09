@@ -1,6 +1,7 @@
 // src/widgets/layout-header/ui/header.tsx
 import React from 'react';
 import { Typography } from '@shared/ui/typography';
+import { LanguageSelector } from '@shared/ui/language-selector'; // Import LanguageSelector
 
 export const LayoutHeader: React.FC = () => {
   return (
@@ -9,7 +10,7 @@ export const LayoutHeader: React.FC = () => {
         <Typography variant="h3" className="text-xl font-bold">
           🧠 Quiz Master
         </Typography>
-        {/* Potentially add navigation or user info here later */}
+        <LanguageSelector /> {/* Add LanguageSelector here */}
         <nav>
           {/* <ul className="flex space-x-4">
             <li><a href="#" className="hover:text-gray-300">Home</a></li>
