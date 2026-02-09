@@ -28,31 +28,31 @@ export const QuizBoard: React.FC = () => {
     null,
   );
   const [timerKey, setTimerKey] = useState(0);
-  // Removed hasAnsweredCurrentQuestion state, replaced by useRef
   const answeredRef = useRef(false); // New useRef for Issue 1
-
   const [hasInitialQuestionFetched, setHasInitialQuestionFetched] =
     useState(false); // New state for API rate limit fix
   const [quizEndReason, setQuizEndReason] = useState<
     "timeout" | "completed" | null
   >(null);
+  const [isTimerPaused, setIsTimerPaused] = useState(false); // New state for Problem 3
 
   const {
     score,
-    resetSession, // Keep resetSession for handlePlayAgain, but remove from startNewQuiz
+    resetSession,
     incrementQuestionIndex,
     incrementScore,
     incrementAnsweredQuestions,
     isQuizOver,
     setQuizOver,
-    questionIndex, // Added questionIndex
+    questionIndex,
   } = useQuizSessionStore();
 
   const getQuestion = useCallback(
     async (refresh = false) => {
       if (isQuizOver) return;
 
-      // Logic: If we have questions loaded and index is valid, just switch question
+      setIsTimerPaused(false); // Resume timer for new question (Problem 3)
+
       const currentQuestions = questionState.data;
       if (
         !refresh &&
@@ -76,20 +76,16 @@ export const QuizBoard: React.FC = () => {
       setSelectedAnswer(null);
       setAnsweredCorrectly(null);
       setTimerKey((prevKey) => prevKey + 1);
-      answeredRef.current = false; // Reset useRef for new question (Issue 1)
+      answeredRef.current = false;
 
       const result = await fetchQuestions(QUIZ_LENGTH, refresh);
 
-      // Removed setQuizOver(true) here for API error handling (New Issue)
       setQuestionState(result);
-      // When fetching new batch, typically we expect to start from index 0 or current index
       if (result.data) {
         const qIndex = refresh ? 0 : questionIndex;
-        // Safety check
         if (result.data[qIndex]) {
           setCurrentQuestion(result.data[qIndex]);
         } else {
-          // Fallback or error - if index out of bounds of new batch
           setCurrentQuestion(result.data[0]);
         }
       } else {
@@ -105,11 +101,9 @@ export const QuizBoard: React.FC = () => {
   }, [getQuestion]);
 
   useEffect(() => {
-    // Only call startNewQuiz if there's no question loaded and quiz is not over
-    // and if the initial question for this component mount has not been fetched yet.
     if (!currentQuestion && !isQuizOver && !hasInitialQuestionFetched) {
       startNewQuiz();
-      setHasInitialQuestionFetched(true); // Mark initial fetch as done
+      setHasInitialQuestionFetched(true);
     }
   }, [currentQuestion, isQuizOver, hasInitialQuestionFetched, startNewQuiz]);
 
@@ -123,31 +117,47 @@ export const QuizBoard: React.FC = () => {
       return;
 
     answeredRef.current = true;
+    setIsTimerPaused(true); // Pause timer when answer is selected (Problem 3)
     setSelectedAnswer(answer);
     const correct = checkAnswer(answer, currentQuestion.correctAnswer);
     setAnsweredCorrectly(correct);
 
+    // Debugging for Problem 1
+    console.log(
+      "handleAnswerSelected: correct =",
+      correct,
+      "score before =",
+      score,
+    );
     if (correct) {
       incrementScore();
+      console.log("handleAnswerSelected: incrementScore called");
+    } else {
+      console.log(
+        "handleAnswerSelected: answer incorrect, score not incremented",
+      );
     }
+    console.log(
+      "handleAnswerSelected: score after (check next render) =",
+      useQuizSessionStore.getState().score,
+    );
+
     incrementQuestionIndex();
     incrementAnsweredQuestions();
 
-    // Check if we've reached the end of the batch
     const batchSize = questionState.data?.length || QUIZ_LENGTH;
     const nextIndex = questionIndex + 1;
 
     if (nextIndex >= batchSize) {
-      // End of quiz - mark as completed
       setQuizEndReason("completed");
       setQuizOver(true);
     }
-    // No auto-advance - user must click Next Question button
   };
 
   const handleTimerEnd = useCallback(() => {
     setQuizEndReason("timeout");
     setQuizOver(true);
+    setIsTimerPaused(true); // Ensure timer is paused if it ends naturally (Problem 3)
   }, [setQuizOver]);
 
   const handlePlayAgain = () => {
@@ -155,6 +165,7 @@ export const QuizBoard: React.FC = () => {
     setQuizOver(false);
     setQuizEndReason(null);
     setHasInitialQuestionFetched(false);
+    setIsTimerPaused(false); // Unpause timer for new quiz (Problem 3)
     getQuestion(true);
   };
 
@@ -177,6 +188,7 @@ export const QuizBoard: React.FC = () => {
             key={timerKey}
             totalTime={30}
             onTimerEnd={handleTimerEnd}
+            isPaused={isTimerPaused} // Pass isPaused to QuizTimer (Problem 3)
           />
         ) : isQuizOver && quizEndReason === "timeout" ? (
           <Typography variant="h3" className="text-red-500">
@@ -279,18 +291,15 @@ export const QuizBoard: React.FC = () => {
 
           {selectedAnswer !== null && (
             <div className="mt-4 text-center">
-              {answeredCorrectly !== null && (
+              {answeredCorrectly === false && ( // Only show feedback if answer was incorrect (Problem 2)
                 <Typography
                   variant="p"
-                  className={
-                    answeredCorrectly ? "text-green-400" : "text-red-400"
-                  }
+                  className={"text-red-400"} // Class name is always red for incorrect feedback (Problem 2)
                 >
-                  {answeredCorrectly
-                    ? t("feedback.correct_answer")
-                    : t("feedback.wrong_answer", {
-                        correctAnswer: currentQuestion?.correctAnswer,
-                      })}
+                  {t("feedback.wrong_answer", {
+                    // Only show wrong answer feedback (Problem 2)
+                    correctAnswer: currentQuestion?.correctAnswer,
+                  })}
                 </Typography>
               )}
               <Button

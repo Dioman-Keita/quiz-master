@@ -5,23 +5,21 @@ import { Typography } from '@shared/ui/typography';
 interface QuizTimerProps {
   totalTime: number; // Time in seconds
   onTimerEnd: () => void;
+  isPaused: boolean; // New prop for pausing the timer
 }
 
-export const QuizTimer: React.FC<QuizTimerProps> = ({ totalTime, onTimerEnd }) => {
+export const QuizTimer: React.FC<QuizTimerProps> = ({ totalTime, onTimerEnd, isPaused }) => {
   const [timeLeft, setTimeLeft] = useState(totalTime);
 
-  // Use an effect to reset timeLeft when totalTime changes,
-  // or when a key prop forces remount/reinitialization.
-  // The key prop is handled by React's reconciliation, so `useState(totalTime)`
-  // will re-initialize if the key changes.
-
   useEffect(() => {
-    // This effect ensures timeLeft is reset if totalTime changes
-    // without relying solely on the key prop remounting.
     setTimeLeft(totalTime);
   }, [totalTime]);
 
   useEffect(() => {
+    if (isPaused) { // If paused, clear any existing interval and return
+      return;
+    }
+
     if (timeLeft <= 0) {
       onTimerEnd();
       return;
@@ -32,7 +30,7 @@ export const QuizTimer: React.FC<QuizTimerProps> = ({ totalTime, onTimerEnd }) =
     }, 1000);
 
     return () => clearInterval(timerId); // Cleanup on unmount or if timeLeft changes
-  }, [timeLeft, onTimerEnd, totalTime]); // Added totalTime to dependency array
+  }, [timeLeft, onTimerEnd, totalTime, isPaused]); // Add isPaused to dependency array
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
