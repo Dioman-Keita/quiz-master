@@ -72,7 +72,17 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
           >
             {availableCategories.map((cat) => (
               <option key={cat ? cat.id : ""} value={cat ? cat.id : ""}>
-                {cat ? t(`category.${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`) : t("category.any")}
+                {cat && cat.id === ""
+                  ? t("category.any")
+                  : cat && cat.name === "Science: Computers"
+                    ? t("category.computers")
+                    : cat && cat.name === "Science & Nature"
+                      ? t("category.science_nature")
+                      : cat
+                        ? t(
+                            `category.${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
+                          )
+                        : t("category.any")}
               </option>
             ))}
           </select>
