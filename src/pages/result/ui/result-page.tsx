@@ -1,5 +1,6 @@
 // src/pages/result/ui/result-page.tsx
 import React from "react";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 import { LayoutHeader } from "@widgets/layout-header";
 import { SummaryCard } from "@widgets/result-summary/ui/summary-card";
 import { Button } from "@shared/ui/button";
@@ -11,6 +12,7 @@ interface ResultPageProps {
 }
 
 export const ResultPage: React.FC<ResultPageProps> = ({ onPlayAgain }) => {
+  const { t } = useTranslation(); // Initialize useTranslation
   const { score, answeredQuestions } = useQuizSessionStore();
 
   return (
@@ -22,7 +24,7 @@ export const ResultPage: React.FC<ResultPageProps> = ({ onPlayAgain }) => {
           onClick={onPlayAgain}
           className="mt-8 px-6 py-3 rounded-md bg-purple-600 hover:bg-purple-700 text-white font-bold transition-all duration-200 ease-in-out hover:scale-[1.02]"
         >
-          <Typography variant="large">Play Again</Typography>
+          <Typography variant="large">{t("common.try_again")}</Typography>
         </Button>
       </main>
     </div>

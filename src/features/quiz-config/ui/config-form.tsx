@@ -1,5 +1,6 @@
 // src/features/quiz-config/ui/config-form.tsx
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
 import { Button } from "@shared/ui/button";
 import { Typography } from "@shared/ui/typography";
@@ -23,6 +24,7 @@ const hardcodedCategories: QuizCategory[] = [
 ];
 
 export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
+  const { t } = useTranslation(); // Initialize useTranslation
   const { category, difficulty, setCategory, setDifficulty } =
     useQuizConfigStore();
   const [availableCategories, _setAvailableCategories] =
@@ -53,28 +55,36 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
     <Card className="w-87.5 mx-auto bg-gray-800 text-white shadow-xl rounded-lg p-6">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold mb-4">
-          <Typography variant="h3">Configure Quiz</Typography>
+          <Typography variant="h3">{t("common.settings")}</Typography>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
+          <label htmlFor="category-select" className="block text-sm font-medium text-gray-300 mb-1">
+            {t("common.select_category")}
+          </label>
           <select
-            aria-label="Select Category"
+            id="category-select"
+            aria-label={t("common.select_category")}
             value={typeof category === "object" ? category.id : category}
             onChange={handleCategoryChange}
             className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {availableCategories.map((cat) => (
               <option key={cat ? cat.id : ""} value={cat ? cat.id : ""}>
-                {cat ? cat.name : "Any Category"}
+                {cat ? t(`category.${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`) : t("category.any")}
               </option>
             ))}
           </select>
         </div>
 
         <div>
+          <label htmlFor="difficulty-select" className="block text-sm font-medium text-gray-300 mb-1">
+            {t("common.select_difficulty")}
+          </label>
           <select
-            aria-label="Select Difficulty"
+            id="difficulty-select"
+            aria-label={t("common.select_difficulty")}
             value={difficulty}
             onChange={handleDifficultyChange}
             className="w-full p-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -82,8 +92,8 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
             {difficulties.map((diff) => (
               <option key={diff} value={diff}>
                 {diff === ""
-                  ? "Any Difficulty"
-                  : diff.charAt(0).toUpperCase() + diff.slice(1)}
+                  ? t("difficulty.any")
+                  : t(`difficulty.${diff}`)}
               </option>
             ))}
           </select>
@@ -93,7 +103,7 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
           onClick={onStartQuiz}
           className="w-full py-3 rounded-md bg-purple-600 hover:bg-purple-700 text-white font-bold transition-all duration-200 ease-in-out hover:scale-[1.02]"
         >
-          <Typography variant="large">Start Quiz</Typography>
+          <Typography variant="large">{t("common.start_quiz")}</Typography>
         </Button>
       </CardContent>
     </Card>

@@ -1,6 +1,7 @@
 // src/pages/home/ui/home-page.tsx
 import React from "react";
-import { ConfigForm } from "@features/quiz-config/ui/config-form"; // Assuming ConfigForm is exported from index.ts
+import { useTranslation } from "react-i18next"; // Import useTranslation
+import { ConfigForm } from "@features/quiz-config/ui/config-form";
 import { LayoutHeader } from "@widgets/layout-header";
 import { Typography } from "@shared/ui/typography";
 
@@ -9,6 +10,7 @@ interface HomePageProps {
 }
 
 export const HomePage: React.FC<HomePageProps> = ({ onStartQuiz }) => {
+  const { t } = useTranslation(); // Initialize useTranslation
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
       <LayoutHeader />
@@ -17,7 +19,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onStartQuiz }) => {
           variant="h1"
           className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-center"
         >
-          Quiz Master
+          {t("common.title")} {/* Use translation key */}
         </Typography>
         <ConfigForm onStartQuiz={onStartQuiz} />
       </main>

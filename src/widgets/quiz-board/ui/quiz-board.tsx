@@ -1,5 +1,6 @@
 // src/widgets/quiz-board/ui/quiz-board.tsx
 import React, { useEffect, useState, useCallback } from "react";
+import { useTranslation } from "react-i18next"; // Import useTranslation
 import { QuizTimer } from "@features/quiz-timer";
 import { QuestionCard } from "@entities/question/ui/question-card";
 import { fetchQuestions } from "@entities/question/api/fetch-question";
@@ -11,6 +12,7 @@ import { useQuizSessionStore } from "@entities/session/model/store";
 import { checkAnswer } from "@entities/session/lib/score-logic";
 
 export const QuizBoard: React.FC = () => {
+  const { t } = useTranslation(); // Initialize useTranslation
   const [questionState, setQuestionState] = useState<QuestionState>({
     data: null,
     isLoading: true,
@@ -78,10 +80,10 @@ export const QuizBoard: React.FC = () => {
   return (
     <div className="w-full max-w-2xl">
         <Typography variant="h2" className="mb-8">
-          Quiz Time!
+          {t("common.play")}
         </Typography>
         <div className="mb-4 text-lg font-semibold">
-          Score: {score}
+          {t("common.score")}: {score}
         </div>
         <div className="mb-6">
           {!isQuizOver ? (
@@ -92,7 +94,7 @@ export const QuizBoard: React.FC = () => {
             />
           ) : (
             <Typography variant="h3" className="text-red-500">
-              Time's Up!
+              {t("feedback.times_up")}
             </Typography>
           )}
         </div>
@@ -100,10 +102,10 @@ export const QuizBoard: React.FC = () => {
         {isQuizOver ? (
           <div className="text-center">
             <Typography variant="h4" className="mb-4">
-              Quiz Over! Your final score is {score}.
+              {t("feedback.quiz_over_score", { score })}
             </Typography>
             <Button onClick={handlePlayAgain} className="mt-4 px-6 py-2 bg-green-600 hover:bg-green-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]">
-              Play Again
+              {t("common.try_again")}
             </Button>
           </div>
         ) : (
@@ -111,11 +113,11 @@ export const QuizBoard: React.FC = () => {
             {questionState.isLoading && (
               <Card className="w-87.5 mx-auto">
                 <CardHeader>
-                  <CardTitle>Loading Question...</CardTitle>
+                  <CardTitle>{t("feedback.loading_question")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Typography variant="p">
-                    Please wait while we fetch the next question.
+                    {t("feedback.fetching_question_wait")}
                   </Typography>
                 </CardContent>
               </Card>
@@ -124,13 +126,15 @@ export const QuizBoard: React.FC = () => {
             {questionState.isError && (
               <Card className="w-87.5 mx-auto">
                 <CardHeader>
-                  <CardTitle className="text-red-500">Error</CardTitle>
+                  <CardTitle className="text-red-500">{t("feedback.error")}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Typography variant="p">
-                    Failed to load question: {questionState.error}
+                    {t("feedback.failed_to_load_question", { error: questionState.error })}
                   </Typography>
-                  <Typography variant="p">Please try again later.</Typography>
+                  <Typography variant="p">
+                    {t("feedback.try_again_later")}
+                  </Typography>
                 </CardContent>
               </Card>
             )}
@@ -140,11 +144,11 @@ export const QuizBoard: React.FC = () => {
               !currentQuestion && (
                 <Card className="w-87.5 mx-auto">
                   <CardHeader>
-                    <CardTitle>No Question Available</CardTitle>
+                    <CardTitle>{t("feedback.no_question_available")}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Typography variant="p">
-                      We could not retrieve a question at this time.
+                      {t("feedback.could_not_retrieve_question")}
                     </Typography>
                   </CardContent>
                 </Card>
@@ -169,7 +173,7 @@ export const QuizBoard: React.FC = () => {
                 onClick={getQuestion}
                 className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]"
               >
-                Retry Fetching Question
+                {t("feedback.retry_fetching_question")}
               </Button>
             )}
 
@@ -182,14 +186,14 @@ export const QuizBoard: React.FC = () => {
                       answeredCorrectly ? "text-green-400" : "text-red-400"
                     }
                   >
-                    {answeredCorrectly ? "Correct!" : "Incorrect!"}
+                    {answeredCorrectly ? t("feedback.correct_answer") : t("feedback.wrong_answer", { correctAnswer: currentQuestion?.correctAnswer })}
                   </Typography>
                 )}
                 <Button
                   onClick={getQuestion}
                   className="mt-2 px-6 py-2 bg-purple-600 hover:bg-purple-700 rounded-md transition-all duration-200 ease-in-out hover:scale-[1.02]"
                 >
-                  Next Question
+                  {t("common.next_question")}
                 </Button>
               </div>
             )}
@@ -198,7 +202,7 @@ export const QuizBoard: React.FC = () => {
               !questionState.isLoading &&
               selectedAnswer === null && (
                 <Typography variant="small" className="mt-4 text-gray-400">
-                  Select an answer above.
+                  {t("feedback.select_answer")}
                 </Typography>
               )}
           </>

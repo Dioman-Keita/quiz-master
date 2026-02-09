@@ -4,7 +4,8 @@ import type { Question } from "../model/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
 import { Button } from "@shared/ui/button";
 import { Typography } from "@shared/ui/typography";
-
+import { useTranslation } from "react-i18next";
+import { useTranslatedQuestion } from "@features/hooks/use-translated-question";
 interface QuestionCardProps {
   question: Question;
   isLoading: boolean;
@@ -12,7 +13,7 @@ interface QuestionCardProps {
   error: string | null;
   onAnswerSelected: (answer: string) => void;
   selectedAnswer: string | null;
-  correctAnswer: string | null;
+  correctAnswer: string | null; // This should ideally come from useTranslatedQuestion now
 }
 
 export const QuestionCard: React.FC<QuestionCardProps> = ({
@@ -22,46 +23,64 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   error,
   onAnswerSelected,
   selectedAnswer,
-  correctAnswer,
+  correctAnswer: originalCorrectAnswer, // Rename to avoid conflict
 }) => {
-  if (isLoading) {
+  const { t } = useTranslation();
+  const { translatedQuestion, isTranslating, translationError } =
+    useTranslatedQuestion(question);
+
+  const currentQuestionToDisplay = translatedQuestion || question;
+  const currentCorrectAnswer =
+    translatedQuestion?.correctAnswer || originalCorrectAnswer;
+
+  if (isLoading || isTranslating) {
     return (
       <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
         <CardHeader>
-          <CardTitle>Loading Question...</CardTitle>
+          <CardTitle>
+            {isLoading
+              ? t("feedback.loading_question")
+              : t("feedback.translating_question")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Typography variant="p">
-            Please wait while we fetch the next question.
+            {isLoading
+              ? t("feedback.fetching_question_wait")
+              : t("feedback.translation_in_progress")}
           </Typography>
         </CardContent>
       </Card>
     );
   }
 
-  if (isError) {
+  if (isError || translationError) {
     return (
       <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
         <CardHeader>
-          <CardTitle className="text-red-500">Error</CardTitle>
+          <CardTitle className="text-red-500">{t("feedback.error")}</CardTitle>
         </CardHeader>
         <CardContent>
-          <Typography variant="p">Failed to load question: {error}</Typography>
-          <Typography variant="p">Please try again later.</Typography>
+          <Typography variant="p">
+            {t("feedback.failed_to_load_question", {
+              error: error || translationError,
+            })}
+          </Typography>
+          <Typography variant="p">{t("feedback.try_again_later")}</Typography>
         </CardContent>
       </Card>
     );
   }
 
-  if (!question) {
+  if (!currentQuestionToDisplay) {
     return (
       <Card className="w-full max-w-sm sm:max-w-md md:max-w-lg mx-auto">
         <CardHeader>
-          <CardTitle>No Question Available</CardTitle>
+          <CardTitle>{t("feedback.no_question_available")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Typography variant="p">
-            We could not retrieve a question at this time.
+            {t("feedback.could_not_retrieve_question")}
           </Typography>
         </CardContent>
       </Card>
@@ -73,7 +92,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       return ""; // No answer selected yet
     }
     // If an answer is selected, apply feedback
-    if (option === correctAnswer) {
+    if (option === currentCorrectAnswer) {
       return "bg-green-500 text-white animate-correct-answer"; // Correct answer
     }
     if (option === selectedAnswer) {
@@ -87,12 +106,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <CardHeader>
         <CardTitle className="text-xl font-bold text-center" aria-live="polite">
           <Typography variant="h4">
-            {decodeURIComponent(question.question)}
+            {decodeURIComponent(currentQuestionToDisplay.question)}
           </Typography>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {question.options.map((option, index) => (
+        {currentQuestionToDisplay.options.map((option, index) => (
           <Button
             key={index}
             className={`w-full py-3 rounded-md transition-all duration-200 ease-in-out
