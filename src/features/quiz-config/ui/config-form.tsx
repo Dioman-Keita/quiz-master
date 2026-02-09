@@ -82,7 +82,7 @@ export const ConfigForm: React.FC<ConfigFormProps> = ({ onStartQuiz }) => {
                         ? t(
                             `category.${cat.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}`,
                           )
-                        : ""}
+                        : t("category.any")}
               </option>
             ))}
           </select>
