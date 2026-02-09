@@ -9,9 +9,10 @@ type Page = "home" | "game" | "result";
 
 function App() {
   const [currentPage, setCurrentPage] = useState<Page>("home");
-  const { isQuizOver } = useQuizSessionStore();
+  const { isQuizOver, resetSession } = useQuizSessionStore(); // Import resetSession
 
   const handleStartQuiz = () => {
+    resetSession(); // Reset session before starting a new quiz (Fix for Issue 3)
     setCurrentPage("game");
   };
 
@@ -32,7 +33,7 @@ function App() {
     if (isQuizOver) {
       handleQuizEnd();
     }
-  }, [isQuizOver]);
+  }, [isQuizOver]); // Added handleQuizEnd to dependencies for completeness, though it's stable
 
   switch (currentPage) {
     case "game":

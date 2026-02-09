@@ -8,7 +8,7 @@ export const useQuizSessionStore = create<QuizSessionStore>((set) => ({
   answeredQuestions: 0,
   isQuizOver: false,
 
-  incrementScore: () => set((state) => ({ score: state.score + 1 })),
+  incrementScore: () => set((state) => { console.log('incrementScore called'); return { score: state.score + 1 }; }),
   incrementQuestionIndex: () =>
     set((state) => ({ questionIndex: state.questionIndex + 1 })),
   incrementAnsweredQuestions: () =>
