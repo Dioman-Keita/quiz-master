@@ -1,5 +1,6 @@
 // src/app/App.tsx
 import React, { useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
 import { HomePage } from "@pages/home/ui/home-page";
 import { GamePage } from "@pages/game/ui/game-page";
 import { ResultPage } from "@pages/result/ui/result-page";
@@ -35,15 +36,25 @@ function App() {
     }
   }, [isQuizOver]); // Added handleQuizEnd to dependencies for completeness, though it's stable
 
+  let pageContent;
   switch (currentPage) {
     case "game":
-      return <GamePage />;
+      pageContent = <GamePage />;
+      break;
     case "result":
-      return <ResultPage onPlayAgain={handlePlayAgain} />;
+      pageContent = <ResultPage onPlayAgain={handlePlayAgain} />;
+      break;
     case "home":
     default:
-      return <HomePage onStartQuiz={handleStartQuiz} />;
+      pageContent = <HomePage onStartQuiz={handleStartQuiz} />;
   }
+
+  return (
+    <>
+      {pageContent}
+      <Analytics />
+    </>
+  );
 }
 
 export default App;
